@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Edge Ghost
 // @namespace    https://github.com/jason9294
-// @version      0.2.1
+// @version      0.2.2
 // @description  A simple userscript that allows you to chat with ChatGPT using OpenAI's API
 // @match        *://*/*
 // @connect     api.openai.com
@@ -163,9 +163,9 @@
   const responseContainer = createResponseContainer();
   chatBox.appendChild(responseContainer);
 
-  // Ctrl + M to toggle chat box visibility
+  // alt + c to toggle chat box visibility
   document.addEventListener("keydown", (event) => {
-    if (event.ctrlKey && event.key === "m") {
+    if (event.altKey && event.key === "c") {
       chatBox.style.display = chatBox.style.display === "block" ? "none" : "block";
     }
   });
