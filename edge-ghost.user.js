@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Edge Ghost
 // @namespace    https://github.com/jason9294
-// @version      0.2.0
+// @version      0.2.1
 // @description  A simple userscript that allows you to chat with ChatGPT using OpenAI's API
 // @match        *://*/*
 // @connect     api.openai.com
@@ -237,6 +237,54 @@
     }
   });
 
-  const subjects = document.querySelectorAll(".subject")
-  alert(subjects.length);
+  // 攔截 request
+  let subjects = [];
+
+  // 儲存原始的 XMLHttpRequest 的 open 和 send 方法
+  const originalXhrOpen = XMLHttpRequest.prototype.open;
+  const originalXhrSend = XMLHttpRequest.prototype.send;
+
+  // 覆寫 XMLHttpRequest 的 open 方法
+  XMLHttpRequest.prototype.open = function (method, url) {
+    // 檢查是否為目標API的請求
+    if (url.includes('/api/exams') && url.includes('/distribute')) {
+      this.isTargetRequest = true;
+    }
+    if (this.isTargetRequest) console.log('目標請求:', this.targetType, url); // 在控制台中顯示目標請求
+    return originalXhrOpen.apply(this, arguments); // 呼叫原始的 open 方法
+  };
+
+  // 覆寫 XMLHttpRequest 的 send 方法
+  XMLHttpRequest.prototype.send = function () {
+    if (this.isTargetRequest) { // 若是目標API請求
+      this.addEventListener('readystatechange', function () {
+        if (this.readyState === 4 && this.status === 200) {
+          try {
+            let response = JSON.parse(this.responseText);
+            subjects = response.subjects;
+          } catch (error) {
+            console.error('Error parsing response:', error);
+          }
+        }
+      });
+    }
+    return originalXhrSend.apply(this, arguments);
+  };
+
+  // alt + a
+  document.addEventListener("keydown", (event) => {
+    if (event.altKey && event.key === "a") {
+      if (subjects.length === 0) return;
+      alert('start');
+
+      const subjectsElement = document.querySelectorAll(".subject");
+
+      subjects.forEach((subject, index) => {
+        // TODO
+      });
+    }
+  });
+
+  // const subjects = document.querySelectorAll(".subject")
+  // alert(subjects.length);
 })();

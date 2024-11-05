@@ -22,7 +22,7 @@
 
 1. 安裝 [Tampermonkey](https://www.tampermonkey.net/)
 2. 安裝腳本：
-   - 點擊 [此處]() 安裝腳本
+   - 點擊 [此處](https://github.com/jason9294/EdgeGhost/raw/main/edge-ghost.user.js) 安裝腳本
 
 ## 使用方法
 
